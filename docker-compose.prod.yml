@@ -1,0 +1,79 @@
+# =============================================================================
+# Production Docker Compose
+# =============================================================================
+# Usage: docker compose -f docker-compose.prod.yml up -d
+#
+# Environment variables required:
+#   AWS_ACCOUNT_ID       - AWS account number for ECR
+#   AWS_REGION           - AWS region where ECR repos live
+#   RAG_IMAGE_TAG        - Image tag for rag-api  (e.g., latest, <sha>)
+#   VOICE_IMAGE_TAG      - Image tag for voice-agent
+#   LIVEKIT_URL          - WebSocket URL from LiveKit Cloud
+#   LIVEKIT_API_KEY      - LiveKit API key
+#   LIVEKIT_API_SECRET   - LiveKit API secret
+#   OPENAI_API_KEY       - OpenAI API key for LLM
+#   DEEPGRAM_API_KEY     - Deepgram API key for STT
+#   CARTESIA_API_KEY     - Cartesia API key for TTS
+#
+# Example .env:
+#   AWS_ACCOUNT_ID=123456789012
+#   AWS_REGION=us-east-1
+#   RAG_IMAGE_TAG=latest
+#   VOICE_IMAGE_TAG=latest
+#   LIVEKIT_URL=wss://your-project.livekit.cloud
+#   LIVEKIT_API_KEY=...
+#   LIVEKIT_API_SECRET=...
+#   OPENAI_API_KEY=...
+#   DEEPGRAM_API_KEY=...
+#   CARTESIA_API_KEY=...
+# =============================================================================
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: real-estate-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  rag-api:
+    # ECR image: real-estate-rag (built by CI and pushed to ECR)
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/real-estate-rag:${RAG_IMAGE_TAG}
+    container_name: real-estate-rag
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+    volumes:
+      - rag_data:/app/data
+    restart: unless-stopped
+
+  voice-agent:
+    # ECR image: real-estate-voice-agent (built by CI and pushed to ECR)
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/real-estate-voice-agent:${VOICE_IMAGE_TAG}
+    container_name: real-estate-voice
+    environment:
+      - LIVEKIT_URL=${LIVEKIT_URL}
+      - LIVEKIT_API_KEY=${LIVEKIT_API_KEY}
+      - LIVEKIT_API_SECRET=${LIVEKIT_API_SECRET}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEEPGRAM_API_KEY=${DEEPGRAM_API_KEY}
+      - CARTESIA_API_KEY=${CARTESIA_API_KEY}
+      - RAG_API_URL=http://rag-api:8000/api
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      rag-api:
+        condition: service_started
+      redis:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  rag_data:

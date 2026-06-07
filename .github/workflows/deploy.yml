@@ -1,0 +1,98 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Test RAG API
+        working-directory: rag
+        run: |
+          uv sync --locked
+          uv run ruff format --check .
+          uv run ruff check .
+          uv run pytest
+
+      - name: Test Voice Agent
+        working-directory: voice-Agent
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          uv sync --locked
+          uv run ruff format --check .
+          uv run ruff check .
+          uv run pytest
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push RAG API
+        uses: docker/build-push-action@v6
+        with:
+          context: ./rag
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/real-estate-rag:latest
+            ${{ steps.login-ecr.outputs.registry }}/real-estate-rag:${{ github.sha }}
+
+      - name: Build and push Voice Agent
+        uses: docker/build-push-action@v6
+        with:
+          context: ./voice-Agent
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/real-estate-voice-agent:latest
+            ${{ steps.login-ecr.outputs.registry }}/real-estate-voice-agent:${{ github.sha }}
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: AWS_ACCOUNT_ID,AWS_REGION
+          script: |
+            set -e
+            APP_DIR=/home/${{ secrets.EC2_USER }}/real-estate-voice-agent
+
+            # Authenticate with ECR
+            aws ecr get-login-password --region "$AWS_REGION" \
+              | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+
+            # Pull compose file and images, then restart
+            curl -sL \
+              "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/docker-compose.prod.yml" \
+              -o "$APP_DIR/docker-compose.prod.yml"
+
+            export RAG_IMAGE_TAG=latest
+            export VOICE_IMAGE_TAG=latest
+
+            docker compose -f "$APP_DIR/docker-compose.prod.yml" pull
+            docker compose -f "$APP_DIR/docker-compose.prod.yml" up -d --force-recreate
+            docker image prune -af --filter "until=24h"
