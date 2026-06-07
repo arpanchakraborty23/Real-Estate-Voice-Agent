@@ -11,10 +11,9 @@ from livekit.agents import (
     room_io,
 )
 from livekit.plugins import ai_coustics, silero
-from livekit.plugins.turn_detector.multilingual import MultilingualModel
 
-from src.agent import RealEstateAgent
-from src.constants import AGENT_NAME
+from src.agent import RealEstateEnglishAgent
+from src.constants import AGENT_NAME, STT_MODEL, TTS_MODEL, TTS_VOICE
 
 logger = logging.getLogger(AGENT_NAME)
 
@@ -35,17 +34,14 @@ async def my_agent(ctx: JobContext):
     ctx.log_context_fields = {"room": ctx.room.name}
 
     session = AgentSession(
-        stt=inference.STT(model="deepgram/nova-3", language="multi"),
-        tts=inference.TTS(
-            model="cartesia/sonic-3", voice="9626c31c-bec5-4cca-baa8-f8ba9e84c8bc"
-        ),
-        turn_detection=MultilingualModel(),
+        stt=inference.STT(model=STT_MODEL, language="multi"),
+        tts=inference.TTS(model=TTS_MODEL, voice=TTS_VOICE),
         vad=ctx.proc.userdata["vad"],
         preemptive_generation=True,
     )
 
     await session.start(
-        agent=RealEstateAgent(),
+        agent=RealEstateEnglishAgent(),
         room=ctx.room,
         room_options=room_io.RoomOptions(
             audio_input=room_io.AudioInputOptions(

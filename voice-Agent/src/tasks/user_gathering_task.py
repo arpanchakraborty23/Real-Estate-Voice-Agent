@@ -7,7 +7,6 @@ from livekit.agents import AgentTask, function_tool
 class UserGatheringResult:
     name: str
     phone: str
-    language: str
     budget: str | None = None
     preferred_location: str | None = None
     property_type: str | None = None
@@ -16,7 +15,7 @@ class UserGatheringResult:
 class UserGatheringTask(AgentTask[UserGatheringResult]):
     """Multi-turn task to collect user details for property recommendations.
 
-    Runs a focused sub-conversation to gather: name, phone, language,
+    Runs a focused sub-conversation to gather: name, phone,
     budget, preferred location, and property type.
     """
 
@@ -31,6 +30,7 @@ class UserGatheringTask(AgentTask[UserGatheringResult]):
                 " Ask one thing at a time: first their name, then phone number,"
                 " then budget range, then preferred location or city,"
                 " then property type (apartment, villa, plot, or commercial)."
+                " Do NOT ask for language preference - we already know it."
                 " Read back all details and ask for confirmation before completing."
                 " Be polite and professional."
             ),
@@ -47,7 +47,6 @@ class UserGatheringTask(AgentTask[UserGatheringResult]):
         self,
         name: str,
         phone: str,
-        language: str = "english",
         budget: str | None = None,
         preferred_location: str | None = None,
         property_type: str | None = None,
@@ -57,7 +56,6 @@ class UserGatheringTask(AgentTask[UserGatheringResult]):
         Args:
             name: Full name of the user
             phone: Contact phone number
-            language: Language preference (e.g. english, hindi)
             budget: Budget range (e.g. under 1 crore, 50-80 lakhs)
             preferred_location: City or area they are looking in
             property_type: Type of property (apartment, villa, plot, commercial)
@@ -66,7 +64,6 @@ class UserGatheringTask(AgentTask[UserGatheringResult]):
             UserGatheringResult(
                 name=name,
                 phone=phone,
-                language=language,
                 budget=budget,
                 preferred_location=preferred_location,
                 property_type=property_type,
