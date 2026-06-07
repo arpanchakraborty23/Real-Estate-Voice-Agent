@@ -17,6 +17,7 @@ KMS
 
 # OpenAI Codex
 .codex/config.local.toml
+voice-Agent\.agents
 
 # Gemini CLI
 .gemini/history/
