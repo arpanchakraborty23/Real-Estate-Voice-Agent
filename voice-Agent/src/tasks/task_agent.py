@@ -14,6 +14,18 @@ class UserInfoGatheringResult:
     budget: str | None = None,
 
 
+@dataclass 
+class PropertyRecommendation:
+    location: str
+    price: str
+    bedrooms: int
+    bathrooms: int
+    area_sqft: int
+    property_type: str
+    builder_name: str
+    contact_info: str
+
+
 
 class UserContactTask(AgentTask[UserInfoGatheringResult]):
     """Multi-turn task to collect user contact details for a builder inquiry.
@@ -70,3 +82,29 @@ class UserContactTask(AgentTask[UserInfoGatheringResult]):
             )
         )
 
+
+class PropertySearchTask(AgentTask[list[PropertyRecommendation]]):
+    """Task to search for properties based on user requirements and return recommendations."""
+
+    def __init__(self, chat_ctx: ChatContext = None) -> None:
+        super().__init__(
+            instructions=(
+                "Search for properties that match the user's requirements. "
+                "Use the information collected about their preferences, budget, and location. "
+                "Return a list of property recommendations with details like location, price, "
+                "bedrooms, bathrooms, area, property type, builder name, and contact info."
+            ),
+            chat_ctx=chat_ctx,
+        )
+
+    @function_tool
+    async def return_recommendations(
+        self,
+        property_interest: str | None = None,
+        bedroom_count: int | None = None,
+        family_members: int | None = None,
+        location_preference: str | None = None,
+        budget: str | None = None,
+        ) -> None:
+        """Call when you have the list of property recommendations ready to return."""
+        

@@ -74,3 +74,37 @@ class BaseAgent(Agent):
 
         return f"User Data Collection Completed !"
 
+    @function_tool
+    async def property_recommendation(
+        self,        
+        property_interest: str | None = None,
+        bedroom_count: int | None = None,
+        family_members: int | None = None,
+        location_preference: str | None = None,
+        budget: str | None = None
+    ) -> list[dict]:
+        """Search for properties based on user requirements and return recommendations."""
+        # This is a placeholder implementation. In a real application, this would query a database or API.
+        recommendations = [
+            {
+                "location": "Andheri West, Mumbai",
+                "price": "₹1.5 Crore",
+                "bedrooms": 2,
+                "bathrooms": 2,
+                "area": "1200 sqft",
+                "property_type": "Apartment",
+                "builder_name": "ABC Builders",
+                "contact_info": "+91-9876543210"
+            },
+            {
+                "location": "Bandra East, Mumbai",
+                "price": "₹3 Crore",
+                "bedrooms": 3,
+                "bathrooms": 3,
+                "area": "2000 sqft",
+                "property_type": "Apartment",
+                "builder_name": "XYZ Constructions",
+                "contact_info": "+91-9123456780"
+            }
+        ]
+        return recommendations
