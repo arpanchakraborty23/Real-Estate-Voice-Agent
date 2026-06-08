@@ -32,6 +32,12 @@ class ModelsConfig:
     CARTESIA_TTS_VOICE = os.getenv("TTS_VOICE", "9626c31c-bec5-4cca-baa8-f8ba9e84c8bc")
     OPENAI_LLM_MODEL = os.getenv("LLM_MODEL", "openai/gpt-5.2-chat-latest")
 
+class SiptrankConfig:
+    SIP_TRUNK_HOSTNAME = os.getenv("SIP_TRUNK_HOSTNAME")
+    SIP_AUTH_USERNAME = os.getenv("SIP_AUTH_USERNAME")
+    SIP_AUTH_PASSWORD = os.getenv("SIP_AUTH_PASSWORD")
+    SUPPORT_AGENT_PHONE_NUMBER = os.getenv("SUPPORT_AGENT_PHONE_NUMBER")
+
 
 @dataclass
 class AgentConfig:
@@ -41,3 +47,4 @@ class AgentConfig:
     MODELS: type[ModelsConfig] = ModelsConfig
     AWS: type[AWSConfig] = AWSConfig
     PROVIDER_API: type[ProviderAPIConfig] = ProviderAPIConfig
+    SIP: type[SiptrankConfig] = SiptrankConfig

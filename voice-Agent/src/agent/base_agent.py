@@ -2,8 +2,11 @@ from collections.abc import AsyncIterable
 
 from livekit import rtc
 from livekit.agents import Agent, ModelSettings, function_tool, llm, stt
+from livekit.agents.beta.workflows import WarmTransferTask
+from livekit.protocol.sip import SIPOutboundConfig
 
 from ..tasks import UserContactTask
+from ..constants import AgentConfig
 
 
 
@@ -108,3 +111,23 @@ class BaseAgent(Agent):
             }
         ]
         return recommendations
+
+    @function_tool
+    async def warm_transfer_to_agent(self):
+        """Warm transfer the user to a human agent for further assistance."""
+        if not AgentConfig.SIP.SUPPORT_AGENT_PHONE_NUMBER:
+            return "Support agent phone number not configured. Please try again later."
+
+        result = await WarmTransferTask(
+            sip_call_to=AgentConfig.SIP.SUPPORT_AGENT_PHONE_NUMBER,
+            sip_connection=SIPOutboundConfig(
+                hostname=AgentConfig.SIP.SIP_TRUNK_HOSTNAME,
+                auth_username=AgentConfig.SIP.SIP_AUTH_USERNAME,
+                auth_password=AgentConfig.SIP.SIP_AUTH_PASSWORD,
+            ),
+            chat_ctx=self.chat_ctx,               # Conversation history
+            dtmf="wwww1234#",                     # Dial extension 1234 after ~2s pause
+            ringing_timeout=30.0,                 # Give up after 30s if no answer
+            instructions="Warm transfer the user to a human agent. Provide the agent with the conversation history and context about the user's needs. Ensure a smooth handoff and inform the user about the transfer."
+
+        )

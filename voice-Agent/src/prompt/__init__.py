@@ -1,2 +1,4 @@
-# Prompts are inline in each agent class for task-specific focus.
-# This file reserved for shared prompt fragments if needed later.
+from .english import ENGLISH_PROMPT
+from .hindi import HINDI_PROMPT
+
+__all__ = ["ENGLISH_PROMPT","HINDI_PROMPT"]
