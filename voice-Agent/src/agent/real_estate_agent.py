@@ -1,48 +1,46 @@
 import logging
 
 from livekit.agents import inference
+from livekit.plugins import deepgram, cartesia
 
-from src.agent import BaseAgent
-from src.constants import AGENT_NAME, LLM_MODEL
+from .base_agent import BaseAgent
+from ..constants import AgentConfig
 
-logger = logging.getLogger(AGENT_NAME)
+logger = logging.getLogger(AgentConfig.LIVEKIT.LIVEKIT_AGENT_NAME)
 
 
 class RealEstateEnglishAgent(BaseAgent):
-    def __init__(self, tts: inference.TTS | None = None, chat_ctx=None) -> None:
+    def __init__(self, chat_ctx=None) -> None:
         super().__init__(
-            llm=inference.LLM(model=LLM_MODEL),
-            tts=tts,
-            chat_ctx=chat_ctx,
-            instructions=(
-                "You are a professional real estate assistant for the Indian market. "
-                "Communicate in English. Be polite, helpful, and concise.\n\n"
-                "Available actions:\n"
-                "- collect_property_requirements: Start a guided conversation to understand "
-                "the user's property needs (budget, location, property type). "
-                "Use when the user wants to find or search for properties.\n"
-                "- connect_with_builder: Collect contact details to connect the user "
-                "with a builder or promoter.\n\n"
-                "Greet the user warmly and ask how you can help with their real estate needs."
-            ),
+           instructions="",
+           stt=deepgram.STT(
+               model=AgentConfig.MODELS.DEEPGRAM_STT_MODEL,api_key=AgentConfig.PROVIDER_API.DEEPGRAM_API_KEY,language="en-IN",mip_opt_out=True
+           ),
+           llm=inference.LLM(
+               model=AgentConfig.MODELS.OPENAI_LLM_MODEL,api_key=AgentConfig.PROVIDER_API.OPENAI_API_KEY,extra_kwargs={
+                   "temperature": 0.1, "max_tokens": 500
+                   }
+           ),
+           tts=cartesia.TTS(
+               model="sonic-lite",api_key=AgentConfig.PROVIDER_API.CARTESIA_API_KEY,voice=AgentConfig.MODELS.CARTESIA_TTS_VOICE,language="en",text_pacing=True,emotion=['Excited',"Amazed","Apologetic","Confident","Curious","Happy","Surprised"]
+           ),
+           chat_ctx=chat_ctx,
         )
 
 
+
 class RealEstateHindiAgent(BaseAgent):
-    def __init__(self, tts: inference.TTS | None = None, chat_ctx=None) -> None:
+    def __init__(self, chat_ctx=None) -> None:
         super().__init__(
-            llm=inference.LLM(model=LLM_MODEL),
-            tts=tts,
-            chat_ctx=chat_ctx,
-            instructions=(
-                "You are a professional real estate assistant for the Indian market. "
-                "Communicate in Hindi. Be polite, helpful, and concise.\n\n"
-                "Available actions:\n"
-                "- collect_property_requirements: Start a guided conversation to understand "
-                "the user's property needs (budget, location, property type). "
-                "Use when the user wants to find or search for properties.\n"
-                "- connect_with_builder: Collect contact details to connect the user "
-                "with a builder or promoter.\n\n"
-                "Greet the user warmly and ask how you can help with their real estate needs."
+            instructions="",
+            stt=deepgram.STT(
+                model=AgentConfig.MODELS.DEEPGRAM_STT_MODEL,api_key=AgentConfig.PROVIDER_API.DEEPGRAM_API_KEY,language="hi-IN",mip_opt_out=True
             ),
+            llm=inference.LLM(model=AgentConfig.MODELS.OPENAI_LLM_MODEL,api_key=AgentConfig.PROVIDER_API.OPENAI_API_KEY,extra_kwargs={
+                "temperature": 0.1, "max_tokens": 500
+            }),
+            tts=cartesia.TTS(
+                model="sonic-lite",api_key=AgentConfig.PROVIDER_API.CARTESIA_API_KEY,voice=AgentConfig.MODELS.CARTESIA_TTS_VOICE,language="hi",text_pacing=True,emotion=['Excited',"Amazed","Apologetic","Confident","Curious","Happy","Surprised"]
+            ),
+            chat_ctx=chat_ctx,
         )

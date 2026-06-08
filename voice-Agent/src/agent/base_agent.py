@@ -39,11 +39,13 @@ class BaseAgent(Agent):
         self,
         chat_ctx: llm.ChatContext,
         model_settings: ModelSettings,
+        tools: list[llm.Tool]
     ) -> AsyncIterable[llm.ChatChunk]:
         async for chunk in Agent.default.llm_node(
             self,
             chat_ctx=chat_ctx,
             model_settings=model_settings,
+            tools=tools,
         ):
             yield chunk
 
