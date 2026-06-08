@@ -1,4 +1,4 @@
-from .builder_contact_task import BuilderContactTask
-from .user_gathering_task import UserGatheringTask
+from .task_agent import UserContactTask
 
-__all__ = ["BuilderContactTask", "UserGatheringTask"]
+
+__all__ = ["UserContactTask"]

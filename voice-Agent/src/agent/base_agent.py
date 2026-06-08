@@ -3,8 +3,8 @@ from collections.abc import AsyncIterable
 from livekit import rtc
 from livekit.agents import Agent, ModelSettings, function_tool, llm, stt
 
-from src.tasks import BuilderContactTask, UserGatheringTask
-from src.utils.state import SessionState
+from ..tasks import UserContactTask
+
 
 
 class BaseAgent(Agent):
@@ -13,7 +13,6 @@ class BaseAgent(Agent):
         self.language = "en"
 
     async def on_enter(self):
-        self.session.userdata = SessionState()
         await self.session.generate_reply(
             instructions="Greet the user warmly. Ask which language they prefer: English or Hindi."
         )
@@ -62,39 +61,16 @@ class BaseAgent(Agent):
         Use this when the user wants to find or search for properties,
         apartments, villas, plots, or commercial spaces.
         """
-        result = await UserGatheringTask(
-            language=self.language,
+        result = await UserContactTask(
             chat_ctx=self.chat_ctx.copy(exclude_instructions=True),
         )
-        self.session.userdata.user_name = result.name
-        self.session.userdata.user_phone = result.phone
-        self.session.userdata.budget = result.budget
-        self.session.userdata.preferred_location = result.preferred_location
-        self.session.userdata.property_type = result.property_type
-        parts = [f"Thank you, {result.name}. I have your requirements."]
-        if result.budget:
-            parts.append(f"Budget: {result.budget}.")
-        if result.preferred_location:
-            parts.append(f"Location: {result.preferred_location}.")
-        if result.property_type:
-            parts.append(f"Property type: {result.property_type}.")
-        parts.append("Let me know if you would like to search for matching properties.")
-        return " ".join(parts)
 
-    @function_tool
-    async def connect_with_builder(self) -> str:
-        """Collect contact details to connect the user with a builder or promoter.
+        self.session.say(f"Thank you, {result.name}. I have your requirements.")
 
-        Use this when the user wants to get in touch with a builder,
-        promoter, or developer about a property.
-        """
-        result = await BuilderContactTask(
-            chat_ctx=self.chat_ctx.copy(exclude_instructions=True),
+        self.chat_ctx.add_message(
+            role="assistant",
+            content=f"Collected property requirements: {result}",
         )
-        self.session.userdata.user_name = result.name
-        self.session.userdata.user_phone = result.phone
-        return (
-            f"Thank you, {result.name}. Your request to connect with a builder "
-            f"has been submitted. A representative will contact you at "
-            f"{result.phone}."
-        )
+
+        return f"User Data Collection Completed !"
+

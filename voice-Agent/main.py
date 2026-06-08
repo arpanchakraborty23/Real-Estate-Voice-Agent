@@ -7,15 +7,15 @@ from livekit.agents import (
     JobContext,
     JobProcess,
     cli,
-    inference,
+    TurnHandlingOptions,
     room_io,
 )
 from livekit.plugins import ai_coustics, silero
 
 from src.agent import RealEstateEnglishAgent
-from src.constants import AGENT_NAME, STT_MODEL, TTS_MODEL, TTS_VOICE
+from src.constants import AgentConfig
 
-logger = logging.getLogger(AGENT_NAME)
+logger = logging.getLogger(AgentConfig.LIVEKIT.LIVEKIT_AGENT_NAME)
 
 load_dotenv(".env.local")
 
@@ -29,15 +29,16 @@ def prewarm(proc: JobProcess):
 server.setup_fnc = prewarm
 
 
-@server.rtc_session(agent_name=AGENT_NAME)
+@server.rtc_session()
 async def my_agent(ctx: JobContext):
     ctx.log_context_fields = {"room": ctx.room.name}
 
     session = AgentSession(
-        stt=inference.STT(model=STT_MODEL, language="multi"),
-        tts=inference.TTS(model=TTS_MODEL, voice=TTS_VOICE),
         vad=ctx.proc.userdata["vad"],
         preemptive_generation=True,
+        turn_handling=TurnHandlingOptions(
+            turn_detection="stt"
+        )
     )
 
     await session.start(
