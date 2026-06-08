@@ -1,6 +1,14 @@
+import json
 from dataclasses import dataclass
 
-from livekit.agents import AgentTask, function_tool, ChatContext
+from livekit.agents import (
+    AgentTask,
+    ChatContext,
+    RunContext,
+    function_tool,
+    get_job_context,
+)
+from livekit.agents.llm import ToolError
 
 
 @dataclass
@@ -14,7 +22,7 @@ class UserInfoGatheringResult:
     budget: str | None = None,
 
 
-@dataclass 
+@dataclass
 class PropertyRecommendation:
     location: str
     price: str
@@ -107,4 +115,44 @@ class PropertySearchTask(AgentTask[list[PropertyRecommendation]]):
         budget: str | None = None,
         ) -> None:
         """Call when you have the list of property recommendations ready to return."""
-        
+
+
+    @function_tool
+    async def send_to_frontend(
+        self,
+        context: RunContext,
+        recommendations_json: str,
+    ) -> str:
+        """Send property recommendations to the frontend for display via RPC.
+
+        The frontend must register an RPC method handler called
+        'showPropertyRecommendations' to receive and display the data.
+
+        Args:
+            recommendations_json: JSON-encoded list of property recommendation objects.
+                Each object should have: location, price, bedrooms, bathrooms,
+                area_sqft, property_type, builder_name, contact_info
+        """
+        try:
+            json.loads(recommendations_json)
+        except json.JSONDecodeError:
+            raise ToolError("Invalid JSON in recommendations_json parameter") from None
+
+        job_ctx = get_job_context()
+        room = job_ctx.room
+
+        participants = list(room.remote_participants.values())
+        if not participants:
+            raise ToolError("No frontend participant connected to send recommendations to")
+
+        try:
+            response = await room.local_participant.perform_rpc(
+                destination_identity=participants[0].identity,
+                method="showPropertyRecommendations",
+                payload=recommendations_json,
+                response_timeout=10.0,
+            )
+            return response or "Recommendations sent to frontend successfully"
+        except Exception as e:
+            raise ToolError(f"Failed to send recommendations to frontend: {e}") from e
+

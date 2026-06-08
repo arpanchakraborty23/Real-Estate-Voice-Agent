@@ -1,4 +1,3 @@
-from .task_agent import UserContactTask
+from .task_agent import PropertyRecommendation, PropertySearchTask, UserContactTask
 
-
-__all__ = ["UserContactTask"]
+__all__ = ["PropertyRecommendation", "PropertySearchTask", "UserContactTask"]

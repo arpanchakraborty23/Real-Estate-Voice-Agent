@@ -75,6 +75,57 @@ cd voice-Agent
 uv run python main.py dev
 ```
 
+## Frontend Integration (RPC)
+
+The voice agent can send data directly to the frontend UI via LiveKit RPC (remote procedure calls). This enables displaying property recommendations, search results, or other structured data on screen alongside the voice conversation.
+
+### How it works
+
+1. The LLM calls the `send_to_frontend` tool on the backend agent
+2. The agent calls `room.local_participant.perform_rpc()` targeting the frontend participant
+3. The frontend receives the data in its registered RPC method handler and updates the UI
+
+### RPC Methods
+
+| Method | Direction | Payload | Description |
+|--------|-----------|---------|-------------|
+| `showPropertyRecommendations` | Agent → Frontend | JSON array of property objects | Display property recommendations on the frontend |
+
+### Frontend Implementation
+
+The frontend must register an RPC method handler before joining the LiveKit room:
+
+```typescript
+import { RpcInvocationData } from 'livekit-client';
+
+localParticipant.registerRpcMethod(
+  'showPropertyRecommendations',
+  async (data: RpcInvocationData) => {
+    const recommendations = JSON.parse(data.payload);
+    // Update your UI with the recommendations
+    return JSON.stringify({ success: true });
+  }
+);
+```
+
+The payload for `showPropertyRecommendations` is a JSON array where each object has:
+```json
+{
+  "location": "Andheri West, Mumbai",
+  "price": "₹1.5 Crore",
+  "bedrooms": 2,
+  "bathrooms": 2,
+  "area_sqft": 1200,
+  "property_type": "Apartment",
+  "builder_name": "ABC Builders",
+  "contact_info": "+91-9876543210"
+}
+```
+
+### Backend Implementation
+
+See `voice-Agent/src/tasks/task_agent.py` — the `send_to_frontend` tool on `PropertySearchTask`.
+
 ## API Reference
 
 | Method | Endpoint | Description |
