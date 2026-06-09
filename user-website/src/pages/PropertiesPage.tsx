@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { fetchProperties } from '@/api/client'
+import { dummyProperties } from '@/data/dummyProperties'
 import type { Property, PropertyFilters } from '@/types'
+import { PropertyDetailModal } from '@/components/PropertyDetailModal'
 
 const propertyTypes = [
   { value: '', label: 'All Types' },
@@ -10,32 +12,37 @@ const propertyTypes = [
   { value: 'condo', label: 'Condo' },
 ]
 
-const fallbackImages = [
-  '/images/beautiful-house.jpg',
-  '/images/luxury-house.jpg',
-  '/images/pool-house.jpg',
-  '/images/rural-house.jpg',
-  '/images/modern-kitchen.jpg',
-  '/images/modern-bedroom.jpg',
-]
-
 export function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState<PropertyFilters>({})
+  const [selected, setSelected] = useState<Property | null>(null)
 
   useEffect(() => {
     setLoading(true)
     fetchProperties(filters)
       .then(setProperties)
-      .catch(() => setProperties([]))
+      .catch(() => {
+        let filtered = dummyProperties
+        if (filters.type) filtered = filtered.filter((p) => p.type === filters.type)
+        if (filters.bedrooms) filtered = filtered.filter((p) => p.bedrooms >= filters.bedrooms!)
+        if (filters.location) {
+          const q = filters.location.toLowerCase()
+          filtered = filtered.filter((p) =>
+            p.location.toLowerCase().includes(q) || p.title.toLowerCase().includes(q),
+          )
+        }
+        if (filters.priceMin) filtered = filtered.filter((p) => p.price >= filters.priceMin!)
+        if (filters.priceMax) filtered = filtered.filter((p) => p.price <= filters.priceMax!)
+        setProperties(filtered)
+      })
       .finally(() => setLoading(false))
   }, [filters])
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
       <h1 className="mb-2 font-display text-3xl font-bold text-ink">Properties</h1>
-      <p className="mb-8 text-ink-muted">Browse our curated selection of properties.</p>
+      <p className="mb-8 text-ink-muted">Browse our curated selection of properties. Click any listing for details.</p>
 
       <div className="mb-8 flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-[200px]">
@@ -111,16 +118,24 @@ export function PropertiesPage() {
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {properties.map((p, i) => (
-            <div key={p.id} className="group rounded-xl bg-card shadow-warm transition-all hover:shadow-warm-lg">
+          {properties.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => setSelected(p)}
+              className="group relative cursor-pointer rounded-xl bg-card text-left shadow-warm transition-all hover:shadow-warm-lg"
+            >
               <div className="relative h-48 overflow-hidden rounded-t-xl bg-border">
                 <img
-                  src={p.image_url ?? fallbackImages[i % fallbackImages.length]}
+                  src={p.image_url}
                   alt={p.title}
                   className="size-full object-cover transition-transform group-hover:scale-105"
+                  loading="lazy"
                 />
-                <span className="absolute top-3 left-3 rounded-full bg-terracotta/90 px-3 py-1 text-xs font-medium text-white">
+                <span className="absolute top-3 left-3 rounded-full bg-terracotta/90 px-3 py-1 text-xs font-medium text-white capitalize">
                   {p.type}
+                </span>
+                <span className="absolute top-3 right-3 rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-mono text-ink-dim">
+                  {p.id}
                 </span>
               </div>
               <div className="p-4">
@@ -135,17 +150,30 @@ export function PropertiesPage() {
                   <span className="text-lg font-bold text-terracotta">
                     ${p.price.toLocaleString()}
                   </span>
-                  <span className="flex items-center gap-1 text-sm text-ink-muted">
-                    <svg className="size-3.5 shrink-0" aria-hidden="true">
-                      <use href="/brand-icons.svg#icon-house" />
-                    </svg>
-                    {p.bedrooms} beds
-                  </span>
+                  <div className="flex items-center gap-3 text-sm text-ink-muted">
+                    <span className="flex items-center gap-1">
+                      <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                        <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z" />
+                      </svg>
+                      {p.bedrooms}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                        <path d="M4 12h16M7 12v-2a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v2" />
+                        <path d="M4 18h16" />
+                      </svg>
+                      {p.bathrooms}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
+      )}
+
+      {selected && (
+        <PropertyDetailModal property={selected} onClose={() => setSelected(null)} />
       )}
     </div>
   )

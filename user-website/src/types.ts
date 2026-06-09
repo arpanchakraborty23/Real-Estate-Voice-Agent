@@ -1,3 +1,13 @@
+export interface Builder {
+  name: string
+  phone: string
+  email: string
+  bio: string
+  yearsExperience: number
+  projectsCompleted: number
+  logo?: string
+}
+
 export interface Property {
   id: string
   title: string
@@ -7,8 +17,13 @@ export interface Property {
   bedrooms: number
   bathrooms: number
   area: number
+  lotSize?: string
+  yearBuilt?: number
+  amenities?: string[]
   image_url: string
+  images?: string[]
   description: string
+  builder?: Builder
 }
 
 export interface PropertyFilters {
@@ -24,6 +39,7 @@ export interface Inquiry {
   email: string
   phone: string
   message: string
+  propertyId?: string
 }
 
 export interface AgentMessage {

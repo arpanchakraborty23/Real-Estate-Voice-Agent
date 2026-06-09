@@ -1,98 +1,130 @@
-import { useEffect, useMemo } from 'react'
-import { useSession } from '@livekit/components-react'
+import { useMemo } from 'react'
+import { useSession, useSessionContext, useAgent } from '@livekit/components-react'
 import { TokenSource } from 'livekit-client'
+import { AnimatePresence, motion } from 'motion/react'
 import { AgentSessionProvider } from '@/components/agents-ui/agent-session-provider'
 import { AgentControlBar } from '@/components/agents-ui/agent-control-bar'
 import { StartAudioButton } from '@/components/agents-ui/start-audio-button'
-import { AudioVisualizer } from '@/components/AudioVisualizer'
-import { VoiceChat } from '@/components/VoiceChat'
+import { AgentAudioVisualizerAura } from '@/components/agents-ui/agent-audio-visualizer-aura'
+import { AgentChatTranscript } from '@/components/agents-ui/agent-chat-transcript'
+import { AgentChatIndicator } from '@/components/agents-ui/agent-chat-indicator'
 import { ImageGallery } from '@/components/ImageGallery'
 import { PropertyRecommendations } from '@/components/PropertyRecommendations'
 import { useVoiceHandlers } from '@/components/VoiceHandlers'
 
-const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL ?? 'ws://localhost:7880'
+const MotionWelcomeView = motion.create('div')
+const MotionSessionView = motion.create('div')
 
-function VoiceContent() {
+const VIEW_MOTION = {
+  variants: { visible: { opacity: 1 }, hidden: { opacity: 0 } },
+  initial: 'hidden',
+  animate: 'visible',
+  exit: 'hidden',
+  transition: { duration: 0.35, ease: 'easeInOut' as const },
+}
+
+function WelcomeView({ onStartCall, startButtonText }: { onStartCall: () => void; startButtonText: string }) {
+  return (
+    <MotionWelcomeView {...VIEW_MOTION} className="flex flex-col items-center justify-center text-center">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none" className="mb-4 text-terracotta">
+        <path d="M32 4a12 12 0 0 0-12 12v16a12 12 0 0 0 24 0V16A12 12 0 0 0 32 4z" fill="currentColor" opacity="0.3" />
+        <path d="M44 28v4a12 12 0 0 1-24 0v-4" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+        <path d="M32 44v8m-6 0h12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+        <circle cx="32" cy="16" r="4" fill="currentColor" />
+      </svg>
+
+      <h2 className="font-display text-xl font-bold text-ink">Real Estate Consulting</h2>
+      <p className="mt-1 text-sm text-ink-muted max-w-xs">
+        Chat live with Anjali, your AI property expert
+      </p>
+
+      <button
+        onClick={onStartCall}
+        className="mt-6 inline-flex h-12 w-64 cursor-pointer items-center justify-center rounded-full bg-terracotta text-xs font-bold tracking-wider text-white uppercase shadow-md shadow-terracotta/20 transition-all hover:bg-terracotta-hover hover:shadow-lg hover:shadow-terracotta/25 active:scale-[0.97]"
+      >
+        {startButtonText}
+      </button>
+    </MotionWelcomeView>
+  )
+}
+
+function SessionView() {
+  const agent = useAgent()
   const { images, recommendations, clearImages } = useVoiceHandlers()
 
   return (
-    <>
-      <div className="mx-auto max-w-4xl">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="flex flex-col items-center gap-4 rounded-xl bg-card p-6 shadow-warm">
-            <AudioVisualizer />
-            <StartAudioButton label="Start Audio" className="rounded-lg bg-terracotta px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-terracotta-hover cursor-pointer" />
-            <AgentControlBar
-              controls={{ microphone: true, leave: true }}
-              className="w-full"
-            />
-          </div>
+    <MotionSessionView {...VIEW_MOTION} className="mx-auto flex w-full max-w-lg flex-col items-center">
+      {/* Aura */}
+      <AgentAudioVisualizerAura
+        size="lg"
+        state={agent.state}
+        color="#c1694f"
+        colorShift={0.08}
+        themeMode="light"
+        className="mb-4"
+      />
 
-          <div className="flex flex-col gap-4 rounded-xl bg-card p-6 shadow-warm">
-            <VoiceChat />
-          </div>
-        </div>
+      {/* State label */}
+      <span className="mb-5 text-sm font-medium text-ink-muted capitalize">
+        {agent.state === 'listening' ? 'Listening...' :
+         agent.state === 'thinking' ? 'Thinking...' :
+         agent.state === 'speaking' ? 'Speaking...' :
+         agent.state === 'connecting' ? 'Connecting...' :
+         agent.state === 'initializing' ? 'Initializing...' :
+         agent.state === 'disconnected' ? 'Disconnected' :
+         agent.state === 'failed' ? 'Connection failed' :
+         'Idle'}
+      </span>
 
-        <div className="mt-6">
-          <ImageGallery images={images} onClear={clearImages} />
-        </div>
+      {/* Controls */}
+      <AgentControlBar
+        controls={{ microphone: true, leave: true }}
+        className="w-full max-w-xs"
+      />
 
-        <div className="mt-6">
-          <PropertyRecommendations properties={recommendations} />
-        </div>
+      {/* Chat transcript */}
+      <div className="mt-6 w-full rounded-xl border border-border/50 bg-card p-4">
+        <AgentChatTranscript className="max-h-48 overflow-y-auto text-sm" />
+        <AgentChatIndicator />
       </div>
-    </>
+
+      {/* Media */}
+      <div className="mt-4 w-full space-y-4">
+        <ImageGallery images={images} onClear={clearImages} />
+        <PropertyRecommendations properties={recommendations} />
+      </div>
+    </MotionSessionView>
+  )
+}
+
+function ViewController() {
+  const { isConnected, start } = useSessionContext()
+
+  return (
+    <AnimatePresence mode="wait">
+      {!isConnected ? (
+        <WelcomeView key="welcome" startButtonText="Start Consultation" onStartCall={start} />
+      ) : (
+        <SessionView key="session-view" />
+      )}
+    </AnimatePresence>
   )
 }
 
 export function HomePage() {
-  const tokenSource = useMemo(() => TokenSource.custom(async (options) => {
-    const res = await fetch('/api/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        roomName: options.roomName,
-        participantName: options.participantName,
-        agentName: options.agentName,
-      }),
-    })
-    if (!res.ok) throw new Error('Failed to fetch token')
-    const { token } = await res.json()
-    return { serverUrl: LIVEKIT_URL, participantToken: token }
-  }), [])
+  const tokenSource = useMemo(
+    () => TokenSource.endpoint('/api/token'),
+    [],
+  )
 
   const session = useSession(tokenSource, { agentName: 'new-house-agent' })
 
-  useEffect(() => {
-    session.start()
-    return () => { session.end() }
-  }, [session])
-
   return (
     <AgentSessionProvider session={session}>
-      <div className="relative mx-auto max-w-6xl px-6 py-8">
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden rounded-2xl opacity-40">
-          <img src="/home-hero.svg" alt="" className="h-full w-full object-cover" />
-        </div>
-        <div className="mb-8 text-center">
-          <div className="mb-2 flex items-center justify-center gap-2">
-            <svg className="size-6 text-terracotta" aria-hidden="true">
-              <use href="/brand-icons.svg#icon-building" />
-            </svg>
-            <svg className="size-5 text-gold" aria-hidden="true">
-              <use href="/brand-icons.svg#icon-star" />
-            </svg>
-          </div>
-          <h1 className="font-display text-3xl font-bold text-ink">
-            Your AI Real Estate Assistant
-          </h1>
-          <p className="mt-1 text-ink-muted">
-            Talk to Anjali — find your dream home
-          </p>
-        </div>
-
-        <VoiceContent />
-      </div>
+      <main className="grid min-h-[calc(100vh-4rem)] grid-cols-1 place-content-center px-6 py-10">
+        <ViewController />
+      </main>
+      <StartAudioButton label="Start Audio" />
     </AgentSessionProvider>
   )
 }
