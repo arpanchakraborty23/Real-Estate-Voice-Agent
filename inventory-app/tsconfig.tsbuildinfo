@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/types.ts","./src/api/client.ts","./src/components/layout.tsx","./src/components/modal.tsx","./src/components/toast.tsx","./src/pages/builders.tsx","./src/pages/dashboard.tsx","./src/pages/properties.tsx"],"version":"5.7.3"}

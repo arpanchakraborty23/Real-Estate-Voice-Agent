@@ -1,0 +1,62 @@
+GitHub [icon: github, label: "GitHub"] {
+  Source [label: "main branch"]
+  CI-CD [label: "GitHub Actions CI/CD"]
+}
+Source -> CI-CD: "push"
+
+AWS-Cloud [label: "AWS Cloud"] {
+  ECR [icon: aws-ecr, label: "Amazon ECR"] {
+    rag-image [label: "real-estate-rag"]
+    voice-image [label: "real-estate-voice-agent"]
+  }
+  EC2 [icon: aws-ec2, label: "Amazon EC2\n(Docker Host)"] {
+    Voice-Agent [icon: aws-ec2, label: "Voice Agent\nLiveKit Agents Python"]
+    Recomm-API [icon: aws-ec2, label: "Recommendation API\nFastAPI + SQLAlchemy"]
+    Redis [icon: aws-elasticache, label: "Redis\nSession State / Cache"]
+  }
+  S3 [icon: aws-s3, label: "Amazon S3\nProperty Assets / Data"]
+}
+IAM [icon: aws-iam, label: "AWS IAM\n(CI/CD Credentials)"]
+
+CI-CD --> IAM: "auth"
+CI-CD --> ECR: "docker build & push"
+ECR --> EC2: "docker pull (via SSH)"
+
+Neon-Postgres [icon: aws-rds, label: "Neon PostgreSQL\nServerless (ap-southeast-1)"]
+
+LiveKit-Cloud [label: "LiveKit Cloud"] {
+  Room [label: "Voice Room"]
+  SIP-Trunk [label: "SIP Trunk\nTelephony"]
+}
+
+OpenAI [icon: aws-client, label: "OpenAI GPT-5\n(LLM Reasoning)"]
+Deepgram [icon: aws-client, label: "Deepgram Nova-3\n(STT: en-IN, hi-IN)"]
+Cartesia [icon: aws-client, label: "Cartesia Sonic-3\n(TTS with Emotion)"]
+
+End-User [icon: aws-client, label: "End User\n(Browser / Website)"]
+Builder [icon: aws-client, label: "Property Builder"]
+Phone-Caller [icon: aws-client, label: "Phone Caller\n(SIP)"]
+
+Admin [icon: aws-client, label: "Inventory Admin"]
+Inventory-App [icon: aws-client, label: "Inventory Management App\n(React + Vite + TypeScript)"] {
+  Dashboard-Page [label: "Analytics Dashboard\nStats + Charts"]
+  Builders-Page [label: "Builder Management\nCRUD Operations"]
+  Properties-Page [label: "Property Management\nCRUD + Filters"]
+}
+
+End-User --> Room: "join audio room"
+Phone-Caller --> SIP-Trunk: "PSTN call"
+SIP-Trunk --> Room
+Room --> Voice-Agent: "audio streams"
+Voice-Agent --> Deepgram: "speech-to-text"
+Voice-Agent --> OpenAI: "intent & tool calling"
+Voice-Agent --> Cartesia: "text-to-speech"
+Voice-Agent --> Recomm-API: "POST /api/recommend"
+Voice-Agent --> Redis: "session state"
+Recomm-API --> Neon-Postgres: "SQL queries"
+Recomm-API --> S3: "property images/docs"
+Builder --> Recomm-API: "POST /api/properties"
+
+Admin --> Inventory-App
+Inventory-App --> Recomm-API: "GET/POST/PUT/DELETE\n/api/builders/*"
+Inventory-App --> Recomm-API: "GET/POST/PUT/DELETE\n/api/properties/*"
