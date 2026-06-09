@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="400" y1="0" x2="400" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5EDE3" offset="0"/>
+      <stop stop-color="#EDE3D5" offset="1"/>
+    </linearGradient>
+    <linearGradient id="house-roof" x1="400" y1="120" x2="400" y2="250">
+      <stop stop-color="#BD7A4E"/>
+      <stop offset="1" stop-color="#A05E3A"/>
+    </linearGradient>
+    <linearGradient id="house-wall" x1="320" y1="240" x2="480" y2="420">
+      <stop stop-color="#F5EDE3"/>
+      <stop offset="1" stop-color="#EDE3D5"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#sky)"/>
+  <path d="M120 450 Q400 420 680 450" stroke="#D4C9B8" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M80 460 Q400 430 720 460" stroke="#D4C9B8" stroke-width="1" fill="none" opacity="0.3"/>
+  <g transform="translate(400,280)">
+    <path d="M-80 120 L0 30 L80 120" fill="url(#house-roof)" stroke="#A05E3A" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="-70" y="118" width="140" height="120" rx="3" fill="url(#house-wall)" stroke="#D4C9B8" stroke-width="1.5"/>
+    <rect x="-25" y="160" width="50" height="78" rx="2" fill="#D4C9B8"/>
+    <path d="M-25 165 L25 165" stroke="#C4B9A8" stroke-width="1"/>
+    <rect x="-60" y="140" width="20" height="20" rx="1" fill="#C9D4E8" opacity="0.6"/>
+    <rect x="40" y="140" width="20" height="20" rx="1" fill="#C9D4E8" opacity="0.6"/>
+    <rect x="-60" y="175" width="20" height="20" rx="1" fill="#C9D4E8" opacity="0.6"/>
+    <rect x="40" y="175" width="20" height="20" rx="1" fill="#C9D4E8" opacity="0.6"/>
+  </g>
+  <circle cx="480" cy="100" r="25" fill="#E8D5B7" opacity="0.3"/>
+  <circle cx="490" cy="90" r="20" fill="#E8D5B7" opacity="0.2"/>
+  <g transform="translate(150,350)">
+    <path d="M-35 55 L0 20 L35 55" fill="#BD7A4E" opacity="0.4"/>
+    <rect x="-28" y="53" width="56" height="50" rx="2" fill="#F5EDE3" stroke="#D4C9B8" stroke-width="1" opacity="0.6"/>
+  </g>
+  <g transform="translate(620,370)">
+    <path d="M-30 45 L0 15 L30 45" fill="#BD7A4E" opacity="0.3"/>
+    <rect x="-24" y="43" width="48" height="42" rx="2" fill="#F5EDE3" stroke="#D4C9B8" stroke-width="1" opacity="0.5"/>
+  </g>
+  <path d="M180 240 Q200 230 220 240" stroke="#C4B9A8" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M560 260 Q580 250 600 260" stroke="#C4B9A8" stroke-width="1" fill="none" opacity="0.3"/>
+  <g transform="translate(120,300)" opacity="0.2">
+    <rect x="0" y="8" width="6" height="12" rx="1" fill="#A05E3A"/>
+    <polygon points="-3,8 3,0 9,8" fill="#BD7A4E"/>
+  </g>
+  <g transform="translate(140,310)" opacity="0.15">
+    <rect x="0" y="6" width="4" height="10" rx="1" fill="#A05E3A"/>
+    <polygon points="-2,6 2,0 6,6" fill="#BD7A4E"/>
+  </g>
+  <g transform="translate(650,320)" opacity="0.2">
+    <rect x="0" y="8" width="6" height="12" rx="1" fill="#A05E3A"/>
+    <polygon points="-3,8 3,0 9,8" fill="#BD7A4E"/>
+  </g>
+  <g transform="translate(670,330)" opacity="0.15">
+    <rect x="0" y="6" width="4" height="10" rx="1" fill="#A05E3A"/>
+    <polygon points="-2,6 2,0 6,6" fill="#BD7A4E"/>
+  </g>
+</svg>

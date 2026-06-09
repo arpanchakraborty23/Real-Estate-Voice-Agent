@@ -8,6 +8,20 @@ services:
       - redis_data:/data
     restart: unless-stopped
 
+  api:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: real-estate-api
+    environment:
+      -HOST=${HOST}
+      -PORT=${PORT}
+    ports:
+      - "8000:8000"
+    volumes:
+      - api_data:/data
+    restart: unless-stopped
+    
   voice-agent:
     build:
       context: ./voice-Agent
@@ -30,5 +44,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  redis_data:
+  redis_data: 
+  api_data:
+
 

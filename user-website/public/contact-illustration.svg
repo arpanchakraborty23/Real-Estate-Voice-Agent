@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <defs>
+    <linearGradient id="c-bg" x1="200" y1="0" x2="200" y2="400">
+      <stop stop-color="#F5EDE3"/>
+      <stop offset="1" stop-color="#EDE3D5"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#c-bg)" rx="12"/>
+  <g opacity="0.08">
+    <circle cx="200" cy="200" r="160" fill="none" stroke="#BD7A4E" stroke-width="1"/>
+    <circle cx="200" cy="200" r="110" fill="none" stroke="#BD7A4E" stroke-width="0.8"/>
+    <circle cx="200" cy="200" r="60" fill="none" stroke="#BD7A4E" stroke-width="0.6"/>
+  </g>
+  <g transform="translate(200,145)">
+    <path d="M-50 0 L-50 -40 Q-50 -55 -35 -55 L35 -55 Q50 -55 50 -40 L50 0" fill="#F5EDE3" stroke="#BD7A4E" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M-50 -40 L0 15 L50 -40" fill="none" stroke="#BD7A4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M-30 -20 Q0 10 30 -20" fill="none" stroke="#A05E3A" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  </g>
+  <g transform="translate(200,250)">
+    <circle cx="0" cy="0" r="45" fill="#F5EDE3" stroke="#D4C9B8" stroke-width="1.5"/>
+    <path d="M-20 -15 L0 5 L20 -15" fill="none" stroke="#BD7A4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M-20 5 L0 25 L20 5" fill="none" stroke="#BD7A4E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+    <path d="M0 -45 L0 -30" stroke="#C4B9A8" stroke-width="1"/>
+    <path d="M-18 -18 L-25 -25" stroke="#C4B9A8" stroke-width="1"/>
+    <path d="M18 -18 L25 -25" stroke="#C4B9A8" stroke-width="1"/>
+  </g>
+  <g transform="translate(95,140)" opacity="0.12">
+    <rect x="-15" y="15" width="30" height="24" rx="2" fill="none" stroke="#BD7A4E" stroke-width="1"/>
+    <path d="M-20 15 L0 2 L20 15" stroke="#BD7A4E" stroke-width="1" fill="none" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(305,180)" opacity="0.12">
+    <rect x="-12" y="12" width="24" height="20" rx="2" fill="none" stroke="#BD7A4E" stroke-width="1"/>
+    <path d="M-16 12 L0 2 L16 12" stroke="#BD7A4E" stroke-width="1" fill="none" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(110,300)" opacity="0.1">
+    <rect x="-10" y="10" width="20" height="16" rx="2" fill="none" stroke="#BD7A4E" stroke-width="1"/>
+    <path d="M-14 10 L0 0 L14 10" stroke="#BD7A4E" stroke-width="1" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
