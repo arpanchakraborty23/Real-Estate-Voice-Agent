@@ -112,7 +112,8 @@ class PropertySearchTask(AgentTask[list[PropertyRecommendation]]):
         bedroom_count: int | None = None,
         family_members: int | None = None,
         location_preference: str | None = None,
-        budget: str | None = None,
+        budget_range: str | None = None,
+        note: str | None = None,
         ) -> None:
         """Call when you have the list of property recommendations ready to return."""
 

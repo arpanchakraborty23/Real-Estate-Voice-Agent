@@ -1,0 +1,52 @@
+property_id,builder_id,builder_name,project_name,property_interest,bedroom_count,location,price,status,amenities,builder_phone,builder_email,note
+KOL-0001,BLD-001,ABC Developers,Green Heights,Apartment,2,New Town Kolkata,5500000,available,Metro;Gym;Pool,+919876543210,[sales@abcdev.com](mailto:sales@abcdev.com),Near metro station
+KOL-0002,BLD-001,ABC Developers,Green Heights Phase 2,Apartment,3,New Town Kolkata,7200000,available,Gym;Pool;Clubhouse,+919876543210,[sales@abcdev.com](mailto:sales@abcdev.com),IT hub nearby
+KOL-0003,BLD-002,Shanti Builders,Lake View Residency,Apartment,2,Salt Lake Kolkata,6800000,available,Gym;Security,+919812345678,[info@shanti.com](mailto:info@shanti.com),Premium locality
+KOL-0004,BLD-002,Shanti Builders,Lake View Residency,Apartment,3,Salt Lake Kolkata,9200000,available,Gym;Clubhouse,+919812345678,[info@shanti.com](mailto:info@shanti.com),Ready to move
+KOL-0005,BLD-003,Eden Realty,Royal Villas,Villa,4,Rajarhat Kolkata,18000000,available,Garden;Parking,+919900112233,[sales@eden.com](mailto:sales@eden.com),Independent villa
+KOL-0006,BLD-003,Eden Realty,Royal Villas,Villa,5,Rajarhat Kolkata,24000000,available,Garden;Pool,+919900112233,[sales@eden.com](mailto:sales@eden.com),Luxury segment
+KOL-0007,BLD-004,Urban Homes,Skyline Towers,Apartment,1,Dum Dum Kolkata,4200000,available,Metro;Parking,+919845612378,[contact@urbanhomes.com](mailto:contact@urbanhomes.com),Airport connectivity
+KOL-0008,BLD-004,Urban Homes,Skyline Towers,Apartment,2,Dum Dum Kolkata,5100000,available,Metro;Security,+919845612378,[contact@urbanhomes.com](mailto:contact@urbanhomes.com),Family friendly
+KOL-0009,BLD-005,Metro Living,Metro Residency,Apartment,2,Garia Kolkata,4500000,available,Metro;Gym,+919811111111,[info@metroliving.com](mailto:info@metroliving.com),Affordable property
+KOL-0010,BLD-005,Metro Living,Metro Residency,Apartment,3,Garia Kolkata,6100000,available,Metro;Clubhouse,+919811111111,[info@metroliving.com](mailto:info@metroliving.com),Near schools
+KOL-0011,BLD-006,Future Infra,Future Enclave,Apartment,2,Barasat Kolkata,3800000,available,Security,+919822222222,[sales@futureinfra.com](mailto:sales@futureinfra.com),Budget home
+KOL-0012,BLD-006,Future Infra,Future Enclave,Apartment,3,Barasat Kolkata,5400000,available,Clubhouse,+919822222222,[sales@futureinfra.com](mailto:sales@futureinfra.com),Growing locality
+KOL-0013,BLD-007,Prime Realty,Prime Heights,Apartment,2,Howrah Kolkata,5000000,available,Gym;Parking,+919833333333,[contact@primerealty.com](mailto:contact@primerealty.com),Railway access
+KOL-0014,BLD-007,Prime Realty,Prime Heights,Apartment,3,Howrah Kolkata,6900000,available,Gym;Security,+919833333333,[contact@primerealty.com](mailto:contact@primerealty.com),Good connectivity
+KOL-0015,BLD-008,Lotus Developers,Lotus Residency,Apartment,2,Ruby Kolkata,5600000,available,Gym;Security,+919844444444,[sales@lotus.com](mailto:sales@lotus.com),Hospital nearby
+KOL-0016,BLD-008,Lotus Developers,Lotus Residency,Apartment,3,Ruby Kolkata,7900000,available,Pool;Clubhouse,+919844444444,[sales@lotus.com](mailto:sales@lotus.com),Premium amenities
+KOL-0017,BLD-009,Heritage Homes,Heritage Park,Apartment,1,Park Circus Kolkata,4100000,available,Security,+919855555555,[info@heritagehomes.com](mailto:info@heritagehomes.com),Central location
+KOL-0018,BLD-009,Heritage Homes,Heritage Park,Apartment,2,Park Circus Kolkata,6200000,available,Gym;Parking,+919855555555,[info@heritagehomes.com](mailto:info@heritagehomes.com),City center
+KOL-0019,BLD-010,Elite Builders,Elite Mansion,Villa,4,Joka Kolkata,17000000,available,Garden;Parking,+919866666666,[sales@elite.com](mailto:sales@elite.com),Large property
+KOL-0020,BLD-010,Elite Builders,Elite Mansion,Villa,5,Joka Kolkata,23000000,available,Garden;Pool,+919866666666,[sales@elite.com](mailto:sales@elite.com),Premium villa
+KOL-0021,BLD-011,Smart Realty,Smart Homes,Apartment,2,Madhyamgram Kolkata,4600000,available,Security,+919877777777,[info@smartrealty.com](mailto:info@smartrealty.com),Affordable
+KOL-0022,BLD-011,Smart Realty,Smart Homes,Apartment,3,Madhyamgram Kolkata,6500000,available,Clubhouse,+919877777777,[info@smartrealty.com](mailto:info@smartrealty.com),Family project
+KOL-0023,BLD-012,Galaxy Developers,Galaxy Residency,Apartment,2,New Town Kolkata,5900000,available,Gym;Pool,+919888888888,[sales@galaxy.com](mailto:sales@galaxy.com),Tech hub nearby
+KOL-0024,BLD-012,Galaxy Developers,Galaxy Residency,Apartment,3,New Town Kolkata,8100000,available,Pool;Clubhouse,+919888888888,[sales@galaxy.com](mailto:sales@galaxy.com),Premium tower
+KOL-0025,BLD-013,Sunrise Infra,Sunrise Park,Apartment,2,Salt Lake Kolkata,6400000,sold,Gym;Security,+919899999999,[contact@sunrise.com](mailto:contact@sunrise.com),Sold out
+
+MUM-0001,BLD-014,Prestige Realty,Prestige Heights,Apartment,2,Andheri Mumbai,9500000,available,Metro;Gym,+919911111111,[sales@prestige.com](mailto:sales@prestige.com),Metro access
+MUM-0002,BLD-014,Prestige Realty,Prestige Heights,Apartment,3,Andheri Mumbai,14500000,available,Pool;Clubhouse,+919911111111,[sales@prestige.com](mailto:sales@prestige.com),Premium tower
+MUM-0003,BLD-015,Horizon Builders,Lake Residency,Apartment,2,Powai Mumbai,12000000,available,Lake View;Gym,+919922222222,[info@horizon.com](mailto:info@horizon.com),Lake view
+MUM-0004,BLD-015,Horizon Builders,Lake Residency,Apartment,3,Powai Mumbai,18000000,available,Pool;Clubhouse,+919922222222,[info@horizon.com](mailto:info@horizon.com),IT park nearby
+MUM-0005,BLD-016,Sunshine Developers,Sunshine Villas,Villa,4,Panvel Mumbai,25000000,available,Garden;Pool,+919933333333,[sales@sunshine.com](mailto:sales@sunshine.com),Large villa
+MUM-0006,BLD-016,Sunshine Developers,Sunshine Villas,Villa,5,Panvel Mumbai,34000000,available,Garden;Pool,+919933333333,[sales@sunshine.com](mailto:sales@sunshine.com),Luxury villa
+MUM-0007,BLD-017,Metro Homes,Metro Residency,Apartment,2,Thane Mumbai,8500000,available,Clubhouse;Security,+919944444444,[info@metrohomes.com](mailto:info@metrohomes.com),Gated community
+MUM-0008,BLD-017,Metro Homes,Metro Residency,Apartment,3,Thane Mumbai,11500000,available,Gym;Pool,+919944444444,[info@metrohomes.com](mailto:info@metrohomes.com),Family project
+MUM-0009,BLD-018,Urban Spaces,Urban Heights,Apartment,1,Ghatkopar Mumbai,7800000,available,Metro;Security,+919955555555,[sales@urbanspaces.com](mailto:sales@urbanspaces.com),Working professional
+MUM-0010,BLD-018,Urban Spaces,Urban Heights,Apartment,2,Ghatkopar Mumbai,10200000,available,Gym;Parking,+919955555555,[sales@urbanspaces.com](mailto:sales@urbanspaces.com),Central location
+MUM-0011,BLD-019,Prime Estates,Prime Residency,Apartment,2,Kandivali Mumbai,9200000,available,Security;Gym,+919966666666,[info@primeestates.com](mailto:info@primeestates.com),Near schools
+MUM-0012,BLD-019,Prime Estates,Prime Residency,Apartment,3,Kandivali Mumbai,13500000,available,Clubhouse;Pool,+919966666666,[info@primeestates.com](mailto:info@primeestates.com),Family area
+MUM-0013,BLD-020,Elite Realty,Elite Towers,Apartment,2,Borivali Mumbai,9800000,available,Gym;Security,+919977777777,[sales@elite.com](mailto:sales@elite.com),Metro nearby
+MUM-0014,BLD-020,Elite Realty,Elite Towers,Apartment,3,Borivali Mumbai,14200000,available,Pool;Parking,+919977777777,[sales@elite.com](mailto:sales@elite.com),Premium amenities
+MUM-0015,BLD-021,Weekend Homes,Luxury Greens,Villa,5,Lonavala Mumbai,42000000,available,Garden;Pool,+919988888888,[info@weekendhomes.com](mailto:info@weekendhomes.com),Weekend villa
+MUM-0016,BLD-021,Weekend Homes,Luxury Greens,Villa,4,Lonavala Mumbai,36000000,available,Garden;Parking,+919988888888,[info@weekendhomes.com](mailto:info@weekendhomes.com),Hill view
+MUM-0017,BLD-022,Future Realty,Future Residency,Apartment,1,Kurla Mumbai,6800000,available,Security,+919999999999,[sales@futurerealty.com](mailto:sales@futurerealty.com),Budget home
+MUM-0018,BLD-022,Future Realty,Future Residency,Apartment,2,Kurla Mumbai,9200000,available,Metro;Gym,+919999999999,[sales@futurerealty.com](mailto:sales@futurerealty.com),Near station
+MUM-0019,BLD-023,City Developers,City Homes,Apartment,2,Mulund Mumbai,9800000,available,Gym;Parking,+919900000001,[info@citydev.com](mailto:info@citydev.com),Family society
+MUM-0020,BLD-023,City Developers,City Homes,Apartment,3,Mulund Mumbai,14500000,available,Pool;Clubhouse,+919900000001,[info@citydev.com](mailto:info@citydev.com),Premium project
+MUM-0021,BLD-024,Harbor Realty,Harbor Heights,Apartment,2,Vashi Mumbai,11200000,available,Security;Gym,+919900000002,[sales@harbor.com](mailto:sales@harbor.com),Corporate hub
+MUM-0022,BLD-024,Harbor Realty,Harbor Heights,Apartment,3,Vashi Mumbai,16500000,available,Clubhouse;Pool,+919900000002,[sales@harbor.com](mailto:sales@harbor.com),Near offices
+MUM-0023,BLD-025,Beachside Developers,Beach Villas,Villa,4,Alibaug Mumbai,35000000,available,Garden;Pool,+919900000003,[info@beachside.com](mailto:info@beachside.com),Vacation home
+MUM-0024,BLD-025,Beachside Developers,Beach Villas,Villa,5,Alibaug Mumbai,48000000,available,Garden;Pool,+919900000003,[info@beachside.com](mailto:info@beachside.com),Beach access
+MUM-0025,BLD-026,Smart Infra,Smart Residency,Apartment,2,Chembur Mumbai,10800000,sold,Gym;Security,+919900000004,[sales@smartinfra.com](mailto:sales@smartinfra.com),Sold out

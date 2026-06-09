@@ -8,23 +8,6 @@ services:
       - redis_data:/data
     restart: unless-stopped
 
-  rag-api:
-    build:
-      context: ./rag
-      dockerfile: Dockerfile
-    container_name: real-estate-rag
-    ports:
-      - "8000:8000"
-    environment:
-      - HOST=0.0.0.0
-      - PORT=8000
-      - REDIS_URL=redis://redis:6379/0
-    depends_on:
-      - redis
-    volumes:
-      - rag_data:/app/data
-    restart: unless-stopped
-
   voice-agent:
     build:
       context: ./voice-Agent
@@ -48,4 +31,4 @@ services:
 
 volumes:
   redis_data:
-  rag_data:
+
