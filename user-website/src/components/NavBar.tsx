@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 const links = [
   { to: '/', label: 'Home', icon: 'icon-home-alt' },
-  { to: '/voice-agent', label: 'Voice Agent', icon: 'icon-mic' },
+  { to: '/voice-agent', label: 'Consulting', icon: 'icon-mic' },
   { to: '/properties', label: 'Properties', icon: 'icon-building' },
   { to: '/about', label: 'About', icon: 'icon-users' },
   { to: '/contact', label: 'Contact', icon: 'icon-phone' },
