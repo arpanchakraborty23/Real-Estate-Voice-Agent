@@ -9,6 +9,7 @@ import { AboutPage } from '@/pages/AboutPage'
 import { ContactPage } from '@/pages/ContactPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 import { LoginPage } from '@/pages/LoginPage'
+import { OnboardingPage } from '@/pages/OnboardingPage'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/onboarding" element={<OnboardingPage />} />
           <Route
             path="/sso-callback"
             element={<AuthenticateWithRedirectCallback redirectUrl="/profile" />}

@@ -158,7 +158,7 @@ export function LoginPage() {
               {mode === 'sign-up' ? (
                 <SignUp
                   appearance={clerkAppearance}
-                  afterSignUpUrl={searchParams.get('redirect') || '/profile'}
+                  afterSignUpUrl={searchParams.get('redirect') || '/onboarding'}
                 />
               ) : (
                 <SignIn
