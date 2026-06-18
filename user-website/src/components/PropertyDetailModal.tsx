@@ -1,6 +1,8 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import type { Property } from '@/types'
 import { submitInquiry } from '@/api/client'
+import { toggleLike, isLiked } from '@/lib/profileStore'
+import { Heart } from 'lucide-react'
 
 export function PropertyDetailModal({
   property,
@@ -10,6 +12,7 @@ export function PropertyDetailModal({
   onClose: () => void
 }) {
   const allImages = property.images?.length ? property.images : [property.image_url]
+  const [liked, setLiked] = useState(() => isLiked(property.id))
   const [activeImg, setActiveImg] = useState(0)
   const [tab, setTab] = useState<'details' | 'builder' | 'contact'>('details')
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
@@ -138,9 +141,21 @@ export function PropertyDetailModal({
           <div className="p-6 sm:p-8">
             <div className="mb-1 flex items-start justify-between gap-4">
               <h2 className="font-display text-2xl font-bold text-ink">{property.title}</h2>
-              <span className="shrink-0 rounded-full bg-terracotta/10 px-3 py-1 text-xs font-mono text-terracotta">
-                {property.id}
-              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => { toggleLike(property.id); setLiked(!liked) }}
+                  className={`flex size-9 items-center justify-center rounded-lg border transition-all ${
+                    liked
+                      ? 'border-terracotta bg-terracotta text-white'
+                      : 'border-border text-ink-muted hover:border-terracotta hover:text-terracotta'
+                  }`}
+                >
+                  <Heart className={`size-4 ${liked ? 'fill-current' : ''}`} />
+                </button>
+                <span className="shrink-0 rounded-full bg-terracotta/10 px-3 py-1 text-xs font-mono text-terracotta">
+                  {property.id}
+                </span>
+              </div>
             </div>
 
             <p className="mb-5 flex items-center gap-1.5 text-sm text-ink-muted">

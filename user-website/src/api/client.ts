@@ -1,4 +1,4 @@
-import type { Property, PropertyFilters, Inquiry } from '@/types'
+import type { Property, PropertyFilters, Inquiry, UserPreferences, SavedSearch, LikedProperty } from '@/types'
 
 const BASE_URL = '/api'
 
@@ -28,5 +28,50 @@ export async function submitInquiry(inquiry: Inquiry): Promise<{ success: boolea
   return request<{ success: boolean }>('/inquiries', {
     method: 'POST',
     body: JSON.stringify(inquiry),
+  })
+}
+
+export async function fetchUserPreferences(): Promise<UserPreferences> {
+  return request<UserPreferences>('/user/preferences')
+}
+
+export async function updateUserPreferences(preferences: Partial<UserPreferences>): Promise<UserPreferences> {
+  return request<UserPreferences>('/user/preferences', {
+    method: 'PATCH',
+    body: JSON.stringify(preferences),
+  })
+}
+
+export async function fetchSavedSearches(): Promise<SavedSearch[]> {
+  return request<SavedSearch[]>('/user/saved-searches')
+}
+
+export async function createSavedSearch(search: Omit<SavedSearch, 'id' | 'createdAt'>): Promise<SavedSearch> {
+  return request<SavedSearch>('/user/saved-searches', {
+    method: 'POST',
+    body: JSON.stringify(search),
+  })
+}
+
+export async function deleteSavedSearch(id: string): Promise<{ success: boolean }> {
+  return request<{ success: boolean }>(`/user/saved-searches/${id}`, {
+    method: 'DELETE',
+  })
+}
+
+export async function fetchLikedProperties(): Promise<LikedProperty[]> {
+  return request<LikedProperty[]>('/user/liked-properties')
+}
+
+export async function likeProperty(propertyId: string): Promise<LikedProperty> {
+  return request<LikedProperty>('/user/liked-properties', {
+    method: 'POST',
+    body: JSON.stringify({ propertyId }),
+  })
+}
+
+export async function unlikeProperty(propertyId: string): Promise<{ success: boolean }> {
+  return request<{ success: boolean }>(`/user/liked-properties/${propertyId}`, {
+    method: 'DELETE',
   })
 }

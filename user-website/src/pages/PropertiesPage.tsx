@@ -3,6 +3,9 @@ import { fetchProperties } from '@/api/client'
 import { dummyProperties } from '@/data/dummyProperties'
 import type { Property, PropertyFilters } from '@/types'
 import { PropertyDetailModal } from '@/components/PropertyDetailModal'
+import { Heart } from 'lucide-react'
+import { toggleLike, isLiked } from '@/lib/profileStore'
+import { useAuthContext } from '@/components/AuthProvider'
 
 const propertyTypes = [
   { value: '', label: 'All Types' },
@@ -17,6 +20,14 @@ export function PropertiesPage() {
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState<PropertyFilters>({})
   const [selected, setSelected] = useState<Property | null>(null)
+  const [likedMap, setLikedMap] = useState<Record<string, boolean>>({})
+  const { isSignedIn } = useAuthContext()
+
+  useEffect(() => {
+    const map: Record<string, boolean> = {}
+    properties.forEach((p) => { map[p.id] = isLiked(p.id) })
+    setLikedMap(map)
+  }, [properties])
 
   useEffect(() => {
     setLoading(true)
@@ -134,7 +145,17 @@ export function PropertiesPage() {
                 <span className="absolute top-3 left-3 rounded-full bg-terracotta/90 px-3 py-1 text-xs font-medium text-white capitalize">
                   {p.type}
                 </span>
-                <span className="absolute top-3 right-3 rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-mono text-ink-dim">
+                <button
+                  onClick={(e) => { e.stopPropagation(); toggleLike(p.id); setLikedMap({ ...likedMap, [p.id]: !likedMap[p.id] }) }}
+                  className={`absolute top-3 right-3 flex size-8 items-center justify-center rounded-full backdrop-blur-sm transition-all ${
+                    likedMap[p.id]
+                      ? 'bg-terracotta text-white shadow-md'
+                      : 'bg-white/70 text-ink-muted hover:bg-white hover:text-terracotta'
+                  }`}
+                >
+                  <Heart className={`size-4 ${likedMap[p.id] ? 'fill-current' : ''}`} />
+                </button>
+                <span className="absolute bottom-3 right-3 rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-mono text-ink-dim">
                   {p.id}
                 </span>
               </div>

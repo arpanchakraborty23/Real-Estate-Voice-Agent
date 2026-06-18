@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { NavBar } from '@/components/NavBar'
 import { Footer } from '@/components/Footer'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { LoginPrompt } from '@/components/LoginPrompt'
 
 export function Layout() {
   return (
@@ -12,6 +13,7 @@ export function Layout() {
           <Outlet />
         </main>
         <Footer />
+        <LoginPrompt />
       </div>
     </TooltipProvider>
   )

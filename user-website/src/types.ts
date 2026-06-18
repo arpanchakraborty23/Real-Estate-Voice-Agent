@@ -57,3 +57,51 @@ export interface PropertyRecommendation {
   bedrooms: number
   image_url: string
 }
+
+export interface UserProfile {
+  id: string
+  firstName: string | null
+  lastName: string | null
+  email: string
+  phone: string | null
+  imageUrl: string | null
+  createdAt: string
+}
+
+export interface UserPreferences {
+  propertyTypes: string[]
+  minPrice: number
+  maxPrice: number
+  bedrooms: number
+  bathrooms: number
+  locations: string[]
+  amenities: string[]
+  notifications: {
+    email: boolean
+    sms: boolean
+    push: boolean
+    newListings: boolean
+    priceDrops: boolean
+    openHouses: boolean
+  }
+}
+
+export interface SavedSearch {
+  id: string
+  name: string
+  filters: {
+    type?: string
+    bedrooms?: number
+    location?: string
+    priceMin?: number
+    priceMax?: number
+  }
+  createdAt: string
+}
+
+export interface LikedProperty {
+  id: string
+  propertyId: string
+  property: Property
+  createdAt: string
+}
