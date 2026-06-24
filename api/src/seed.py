@@ -1,7 +1,7 @@
 import csv
 from sqlalchemy.orm import Session
-from .database import SessionLocal
-from .models import Builder, Property
+from .services.database import SessionLocal
+from .config.models import Builder, Property
 
 
 CSV_PATH = "recommandation-system/data/client_data.csv"

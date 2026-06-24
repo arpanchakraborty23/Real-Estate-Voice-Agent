@@ -3,8 +3,8 @@ import os
 sys.path.insert(0, os.path.dirname(__file__))
 
 from sqlalchemy import text
-from src.database import SessionLocal, engine
-from src.models import Base
+from api.src.services.database import SessionLocal, engine
+from api.src.config.models import Base
 from src.seed import seed_database
 
 

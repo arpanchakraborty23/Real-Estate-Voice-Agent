@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from .database import SessionLocal
-from .models import Property, Builder
-from .schemas import (
+from ..services.database import SessionLocal
+from ..config.models import Property, Builder
+from ..config.schemas import (
     PropertyCreate, PropertyResponse, PropertyUpdate,
     BuilderCreate, BuilderResponse,
     RecommendRequest, RecommendResponse,
