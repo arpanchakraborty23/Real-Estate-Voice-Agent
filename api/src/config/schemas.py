@@ -6,7 +6,7 @@
 # =============================================================================
 
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Dict
 
 
 # -----------------------------------------------------------------------------
@@ -142,47 +142,21 @@ class PropertyResponse(PropertyBase):
 
 
 # -----------------------------------------------------------------------------
-# Recommendation Schemas
+# Agent Schemas
 # -----------------------------------------------------------------------------
 
-class RecommendRequest(BaseModel):
-    """
-    Schema for property recommendation requests.
-    
-    Used by clients to request property recommendations based on
-    their preferences and filters.
-    
-    Attributes:
-        budget_min: Minimum budget (optional)
-        budget_max: Maximum budget (optional)
-        bedrooms: Desired number of bedrooms (optional)
-        location: Preferred location (optional)
-        property_type: Type of property desired (optional)
-        amenities: Desired amenities (optional)
-        status: Property status filter (default: 'available')
-        top_k: Number of recommendations to return (default: 10)
-    """
-    
-    budget_min: Optional[float] = None
-    budget_max: Optional[float] = None
-    bedrooms: Optional[int] = None
-    location: Optional[str] = None
-    property_type: Optional[str] = None
-    amenities: Optional[str] = None
-    status: Optional[str] = "available"
-    top_k: Optional[int] = 10
+class TokenRequest(BaseModel):
+    room_name: Optional[str] = None
+    participant_identity: Optional[str] = None
+    participant_name: Optional[str] = None
+    participant_metadata: Optional[str] = None
+    participant_attributes: Optional[Dict[str, str]] = None
+    room_config: Optional[dict] = None
 
 
-class RecommendResponse(BaseModel):
-    """
-    Schema for property recommendation responses.
-    
-    Contains the recommended property and a relevance score.
-    
-    Attributes:
-        property: The recommended property details
-        score: Relevance score (higher = better match)
-    """
-    
-    property: PropertyResponse
-    score: float
+class TokenRequestOutput(BaseModel):
+    room_name: Optional[str] = None
+    participant_identity: Optional[str] = None
+    participant_name: Optional[str] = None
+    participant_metadata: Optional[str] = None
+    token: Optional[str] = None

@@ -45,3 +45,12 @@ class DatabaseConfig(BaseSettings):
     )
 
 
+class LivekitConfig(BaseSettings):
+    LIVEKIT_URL: str = ""
+    LIVEKIT_API_KEY: str = ""
+    LIVEKIT_API_SECRET = ""
+
+    model_config = SettingsConfigDict(
+        env_file='.env',
+        extra='ignore'
+    )
