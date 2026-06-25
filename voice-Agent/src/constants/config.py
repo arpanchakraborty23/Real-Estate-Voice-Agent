@@ -1,9 +1,33 @@
 import os
 from dotenv import load_dotenv
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Optional
 
 
 load_dotenv()
+
+
+# =======================
+# Database Configs
+# =======================
+
+class MongoDBConfig:
+    MONGODB_URI = os.getenv("MONGODB_URI")
+    MONGODB_DB_NAME = os.getenv("MONGODB_DB_NAME", "real_estate_agent")
+    MONGODB_COLLECTION_NAME = os.getenv("MONGODB_COLLECTION_NAME", "sessions")
+
+
+class RedisConfig:
+    REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+    REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+    REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
+    REDIS_DB = int(os.getenv("REDIS_DB", 0))
+    REDIS_SESSION_TTL = int(os.getenv("REDIS_SESSION_TTL", 7200))  # 2 hours in seconds
+
+
+# =======================
+# Service Configs
+# =======================
 
 class LivekitConfig:
     LIVEKIT_URL = os.getenv("LIVEKIT_URL")
@@ -32,6 +56,7 @@ class ModelsConfig:
     CARTESIA_TTS_VOICE = os.getenv("TTS_VOICE", "9626c31c-bec5-4cca-baa8-f8ba9e84c8bc")
     OPENAI_LLM_MODEL = os.getenv("LLM_MODEL", "openai/gpt-5.2-chat-latest")
 
+
 class SiptrankConfig:
     SIP_TRUNK_HOSTNAME = os.getenv("SIP_TRUNK_HOSTNAME")
     SIP_AUTH_USERNAME = os.getenv("SIP_AUTH_USERNAME")
@@ -39,12 +64,34 @@ class SiptrankConfig:
     SUPPORT_AGENT_PHONE_NUMBER = os.getenv("SUPPORT_AGENT_PHONE_NUMBER")
 
 
+# =======================
+# Agent Config
+# =======================
+
 @dataclass
 class AgentConfig:
+    MONGODB: type[MongoDBConfig] = MongoDBConfig
+    REDIS: type[RedisConfig] = RedisConfig
     LIVEKIT: type[LivekitConfig] = LivekitConfig
     AWS: type[AWSConfig] = AWSConfig
     PROVIDER_API: type[ProviderAPIConfig] = ProviderAPIConfig
     MODELS: type[ModelsConfig] = ModelsConfig
-    AWS: type[AWSConfig] = AWSConfig
-    PROVIDER_API: type[ProviderAPIConfig] = ProviderAPIConfig
     SIP: type[SiptrankConfig] = SiptrankConfig
+
+
+# =======================
+# Session State
+# =======================
+
+@dataclass
+class SessionState:
+    phase: str = "greeting"
+    language: Optional[str] = None
+    user_name: Optional[str] = None
+    user_phone: Optional[str] = None
+    budget: Optional[str] = None
+    preferred_location: Optional[str] = None
+    property_type: Optional[str] = None
+    recommended_properties: list = field(default_factory=list)
+    saved: bool = False
+    session_expires_at: Optional[str] = None
