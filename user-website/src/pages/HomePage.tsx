@@ -1,27 +1,24 @@
 import { useMemo } from 'react'
 import { useAuth } from '@clerk/clerk-react'
-import { useSession, useSessionContext, useAgent } from '@livekit/components-react'
+import { useSession, useSessionContext } from '@livekit/components-react'
 import { TokenSource } from 'livekit-client'
 import { AnimatePresence, motion } from 'motion/react'
 import { AgentSessionProvider } from '@/components/agents-ui/agent-session-provider'
-import { AgentControlBar } from '@/components/agents-ui/agent-control-bar'
 import { StartAudioButton } from '@/components/agents-ui/start-audio-button'
-import { AgentAudioVisualizerAura } from '@/components/agents-ui/agent-audio-visualizer-aura'
-import { AgentChatTranscript } from '@/components/agents-ui/agent-chat-transcript'
-import { AgentChatIndicator } from '@/components/agents-ui/agent-chat-indicator'
+import { AgentSessionView_01 } from '@/components/agents-ui/blocks/agent-session-view-01'
 import { ImageGallery } from '@/components/ImageGallery'
 import { PropertyRecommendations } from '@/components/PropertyRecommendations'
 import { useVoiceHandlers } from '@/components/VoiceHandlers'
 
 const MotionWelcomeView = motion.create('div')
-const MotionSessionView = motion.create('div')
+const MotionSessionView = motion.create(AgentSessionView_01)
 
 const VIEW_MOTION = {
   variants: { visible: { opacity: 1 }, hidden: { opacity: 0 } },
   initial: 'hidden',
   animate: 'visible',
   exit: 'hidden',
-  transition: { duration: 0.35, ease: 'easeInOut' as const },
+  transition: { duration: 0.5, ease: 'linear' as const },
 }
 
 function WelcomeView({ onStartCall, startButtonText }: { onStartCall: () => void; startButtonText: string }) {
@@ -50,46 +47,29 @@ function WelcomeView({ onStartCall, startButtonText }: { onStartCall: () => void
 }
 
 function SessionView() {
-  const agent = useAgent()
   const { images, recommendations, clearImages } = useVoiceHandlers()
+  const hasDynamic = images.length > 0 || recommendations.length > 0
 
   return (
-    <MotionSessionView {...VIEW_MOTION} className="mx-auto flex w-full max-w-lg flex-col items-center">
-      <AgentAudioVisualizerAura
-        size="lg"
-        state={agent.state}
-        color="#c1694f"
-        colorShift={0.08}
-        themeMode="light"
-        className="mb-4"
+    <div className="relative h-full w-full">
+      <MotionSessionView
+        {...VIEW_MOTION}
+        supportsChatInput
+        isPreConnectBufferEnabled
+        audioVisualizerColor="#c1694f"
+        audioVisualizerColorShift={0.08}
+        className="fixed inset-0"
       />
 
-      <span className="mb-5 text-sm font-medium text-ink-muted capitalize">
-        {agent.state === 'listening' ? 'Listening...' :
-         agent.state === 'thinking' ? 'Thinking...' :
-         agent.state === 'speaking' ? 'Speaking...' :
-         agent.state === 'connecting' ? 'Connecting...' :
-         agent.state === 'initializing' ? 'Initializing...' :
-         agent.state === 'disconnected' ? 'Disconnected' :
-         agent.state === 'failed' ? 'Connection failed' :
-         'Idle'}
-      </span>
-
-      <AgentControlBar
-        controls={{ microphone: true, leave: true }}
-        className="w-full max-w-xs"
-      />
-
-      <div className="mt-6 w-full rounded-xl border border-border/50 bg-card p-4">
-        <AgentChatTranscript className="max-h-48 overflow-y-auto text-sm" />
-        <AgentChatIndicator />
-      </div>
-
-      <div className="mt-4 w-full space-y-4">
-        <ImageGallery images={images} onClear={clearImages} />
-        <PropertyRecommendations properties={recommendations} />
-      </div>
-    </MotionSessionView>
+      {hasDynamic && (
+        <div className="fixed bottom-[140px] left-1/2 z-[70] w-full max-w-2xl -translate-x-1/2 px-4 md:bottom-[170px] md:px-0">
+          <div className="max-h-[40vh] space-y-3 overflow-y-auto rounded-xl border border-border/50 bg-card p-3 shadow-warm-lg">
+            <ImageGallery images={images} onClear={clearImages} />
+            <PropertyRecommendations properties={recommendations} />
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -142,7 +122,7 @@ export function HomePage() {
 
   return (
     <AgentSessionProvider session={session}>
-      <main className="grid min-h-[calc(100vh-4rem)] grid-cols-1 place-content-center px-6 py-10">
+      <main className="grid h-svh grid-cols-1 place-content-center">
         <ViewController />
       </main>
       <StartAudioButton label="Start Audio" />

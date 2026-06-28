@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 clerk_config = ClerkConfig(
     jwks_url=APIConstants.api_config.CLERK_JWKS_URL,
+    jwks_cache_keys=True,
     leeway=5.0,
     verify_iat=False,
 )

@@ -33,10 +33,12 @@ const selectVariants = cva(
     variants: {
       variant: {
         default: [
-          'border-none',
+          'border-border',
           'peer-data-[state=off]/track:bg-destructive/10',
           'peer-data-[state=off]/track:hover:bg-destructive/15',
           'peer-data-[state=off]/track:[&_svg]:text-destructive!',
+          'peer-data-[state=on]/track:bg-card',
+          'peer-data-[state=on]/track:border-border',
 
           'dark:peer-data-[state=on]/track:bg-accent',
           'dark:peer-data-[state=on]/track:hover:bg-foreground/10',

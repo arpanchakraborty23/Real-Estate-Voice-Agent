@@ -22,8 +22,26 @@
   --color-danger: #c13f3f;
   --color-card: #ffffff;
 
+  --color-background: var(--color-ivory-light);
+  --color-foreground: var(--color-ink);
+  --color-muted: #f3ece4;
+  --color-muted-foreground: var(--color-ink-muted);
+  --color-accent: #f3ece4;
+  --color-accent-foreground: var(--color-ink);
+  --color-popover: #ffffff;
+  --color-popover-foreground: var(--color-ink);
+  --color-primary: var(--color-terracotta);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f3ece4;
+  --color-secondary-foreground: var(--color-ink);
+  --color-destructive: var(--color-danger);
+  --color-destructive-foreground: #ffffff;
+  --color-ring: var(--color-terracotta);
+  --color-input: #e8ddd0;
+
   --radius-sm: 8px;
   --radius: 12px;
+  --radius-md: 10px;
 
   --shadow-warm: 0 2px 16px rgba(45, 36, 24, 0.06);
   --shadow-warm-lg: 0 8px 32px rgba(45, 36, 24, 0.1);
