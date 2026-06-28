@@ -8,32 +8,19 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-
 class APIServerConfig(BaseSettings):
-    """
-    FastAPI server Configuration settings.
-    """
-    CROS :list =[]
-    PORT: int 
+    CROS: list = []
+    PORT: int
     HOST: str = ""
     CLERK_JWKS_URL: str = ""
 
-    model_config =  SettingsConfigDict(
+    model_config = SettingsConfigDict(
         env_file='.env',
         extra='ignore'
     )
 
-class DatabaseConfig(BaseSettings):
-    """
-    Database configuration settings.
 
-    Attributes:
-        DATABASE_URL: Database connection string (e.g., sqlite+aiosqlite:///db.sqlite)
-        MAX_RETRIES: Maximum number of connection retry attempts
-        RETRY_DELYA_SEC: Delay between retry attempts (in seconds)
-        POOL_SIZE: Number of connections in the database pool
-    """
-    
+class DatabaseConfig(BaseSettings):
     DATABASE_URL: str = ""
     MAX_RETRIES: int = 3
     RETRY_DELYA_SEC: float = 1.0
@@ -48,9 +35,15 @@ class DatabaseConfig(BaseSettings):
 class LivekitConfig(BaseSettings):
     LIVEKIT_URL: str = ""
     LIVEKIT_API_KEY: str = ""
-    LIVEKIT_API_SECRET = ""
+    LIVEKIT_API_SECRET: str = ""
 
     model_config = SettingsConfigDict(
         env_file='.env',
         extra='ignore'
     )
+
+
+class APIConstants:
+    api_config: APIServerConfig = APIServerConfig()
+    db_config: DatabaseConfig = DatabaseConfig()
+    livekit_config: LivekitConfig = LivekitConfig()

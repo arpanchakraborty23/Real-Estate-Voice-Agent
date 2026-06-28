@@ -155,8 +155,9 @@ class TokenRequest(BaseModel):
 
 
 class TokenRequestOutput(BaseModel):
+    server_url: str
     room_name: Optional[str] = None
     participant_identity: Optional[str] = None
     participant_name: Optional[str] = None
     participant_metadata: Optional[str] = None
-    token: Optional[str] = None
+    participant_token: Optional[str] = None

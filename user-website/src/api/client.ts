@@ -1,6 +1,6 @@
 import type { Property, PropertyFilters, Inquiry, UserPreferences, SavedSearch, LikedProperty } from '@/types'
 
-const BASE_URL = '/api'
+const BASE_URL = '/api/v1'
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {

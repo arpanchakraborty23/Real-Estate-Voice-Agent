@@ -11,6 +11,8 @@ from uuid import UUID, uuid4
 
 from sqlmodel import SQLModel, Field, Relationship
 
+Base = SQLModel
+
 
 # =============================================================================
 # User Table

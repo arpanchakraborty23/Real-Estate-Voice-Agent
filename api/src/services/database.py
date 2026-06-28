@@ -3,29 +3,11 @@ import logging
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine, async_sessionmaker
-from sqlalchemy.orm import DeclarativeMeta
 from ..config.models import Base
 
 from ..config import DatabaseConfig
 
-
-# =============================================================================
-# Database Service Module
-# =============================================================================
-# This module provides async database connection management for the API.
-# It handles connection pooling, session creation, and lifecycle management.
-# =============================================================================
-
-import asyncio
-import logging
-from typing import AsyncGenerator
-
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine, async_sessionmaker
-from sqlalchemy.orm import DeclarativeMeta
-from ..config.models import Base
-
-from ..config import DatabaseConfig
-
+db_config = DatabaseConfig()
 
 # Setup logger for this module
 logger = logging.getLogger(__name__)
@@ -39,8 +21,8 @@ logger = logging.getLogger(__name__)
 # =============================================================================
 
 engine: AsyncEngine = create_async_engine(
-    DatabaseConfig.DATABASE_URL,
-    pool_size=DatabaseConfig.POOL_SIZE,          # Number of connections to keep open
+    db_config.DATABASE_URL,
+    pool_size=db_config.POOL_SIZE,               # Number of connections to keep open
     max_overflow=20,                              # Additional connections when pool is full
     pool_pre_ping=True,                           # Verify connections before use
     echo=True                                     # Log SQL statements (disable in production)
@@ -87,7 +69,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             return result.scalars().all()
     """
     last_exception = None
-    for attempt in range(1, DatabaseConfig.MAX_RETRIES + 1):
+    for attempt in range(1, db_config.MAX_RETRIES + 1):
         try:
             async with AsyncSessionLocal() as session:
                 yield session
@@ -95,10 +77,10 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             return
         except Exception as exc:
             last_exception = exc
-            logger.warning("DB attempt %d/%d failed: %s", attempt, DatabaseConfig.MAX_RETRIES, exc)
-            if attempt < DatabaseConfig.MAX_RETRIES:
+            logger.warning("DB attempt %d/%d failed: %s", attempt, db_config.MAX_RETRIES, exc)
+            if attempt < db_config.MAX_RETRIES:
                 # Exponential backoff: wait longer after each failed attempt
-                await asyncio.sleep(DatabaseConfig.RETRY_DELYA_SEC * attempt)
+                await asyncio.sleep(db_config.RETRY_DELYA_SEC * attempt)
     if last_exception:
         raise last_exception
     
