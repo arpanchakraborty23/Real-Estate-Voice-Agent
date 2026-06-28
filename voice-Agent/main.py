@@ -10,7 +10,8 @@ from livekit.agents import (
     cli,
     TurnHandlingOptions,
     room_io,
-    UserStateChangedEvent
+    UserStateChangedEvent,
+    ChatContext
 )
 from livekit.plugins import ai_coustics, silero
 
@@ -26,7 +27,7 @@ load_dotenv(".env.local")
 server = AgentServer(
     api_key=AgentConfig.LIVEKIT.LIVEKIT_API_KEY,
     api_secret=AgentConfig.LIVEKIT.LIVEKIT_API_SECRET,
-    ws_url=AgentConfig.LIVEKIT.LIVEKIT_URL
+    ws_url=AgentConfig.LIVEKIT.LIVEKIT_URL,
     load_threshold=0.9,
     port=8081,
     host="0.0.0.0"
@@ -66,7 +67,12 @@ async def my_agent(ctx: JobContext):
     }
     logger.info("Participant context: %s", participant_context)
 
-        # Initialize session manager with participant context
+    inital_chat_ctx= ChatContext()
+    inital_chat_ctx.add_message(
+        role="system",content=f"User intial inforamtion:/n{participant_context}"
+    )
+
+    # Initialize session manager with participant context
     session_manager.start(session_id=ctx.room.name, participant_context=participant_context)
     # Agent Session 
     session = AgentSession(
@@ -101,7 +107,7 @@ async def my_agent(ctx: JobContext):
 
 
     await session.start(
-        agent=RealEstateEnglishAgent(),
+        agent=RealEstateEnglishAgent(chat_ctx=inital_chat_ctx),
         room=ctx.room,
         room_options=room_io.RoomOptions(
             audio_input=room_io.AudioInputOptions(

@@ -116,24 +116,10 @@ export function HomePage() {
   const { getToken } = useAuth()
 
   const tokenSource = useMemo(
-    () => TokenSource.custom(async (fetchOptions) => {
-      const clerkToken = await getToken()
-      const response = await fetch('/api/v1/agent/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${clerkToken}`,
-        },
-        body: JSON.stringify({
-          roomName: fetchOptions.roomName,
-          participantName: fetchOptions.participantName,
-          participantIdentity: fetchOptions.participantIdentity,
-          participantMetadata: fetchOptions.participantMetadata,
-          participantAttributes: fetchOptions.participantAttributes,
-        }),
-      })
-      if (!response.ok) throw new Error(`Token fetch failed: ${response.status}`)
-      return response.json()
+    () => TokenSource.endpoint('/api/v1/agent/token', {
+      headers: async () => ({
+        Authorization: `Bearer ${await getToken()}`,
+      }),
     }),
     [getToken],
   )
