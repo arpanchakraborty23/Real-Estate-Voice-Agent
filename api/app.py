@@ -78,7 +78,7 @@ app = FastAPI(
     title="Real Estate API",
     version="0.0.1",
     lifespan=lifespan,
-    debug=False
+    debug=True
 )
 
 
@@ -120,8 +120,8 @@ async def health():
 
 if __name__ == "__main__":
     uvicorn.run(
-        "main:app",
+        app,
         host=APIConstants.api_config.HOST,
         port=APIConstants.api_config.PORT,
-        reload=True
+        reload=True,
     )

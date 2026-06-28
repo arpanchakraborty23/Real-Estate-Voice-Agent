@@ -1,4 +1,4 @@
-import type { Property, PropertyFilters, Inquiry, UserPreferences, SavedSearch, LikedProperty } from '@/types'
+import type { Property, PropertyFilters, Inquiry, UserPreferences, SavedSearch, LikedProperty, UserProfile } from '@/types'
 
 const BASE_URL = '/api/v1'
 
@@ -11,6 +11,26 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     throw new Error(`API error: ${res.status} ${res.statusText}`)
   }
   return res.json()
+}
+
+export async function fetchUserProfile(clerkToken: string): Promise<UserProfile> {
+  const data = await request<Record<string, unknown>>('/user/me', {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${clerkToken}`,
+    },
+  })
+  return {
+    id: data.id as string,
+    clerk_user_id: data.clerk_user_id as string,
+    firstName: (data.first_name as string) || null,
+    lastName: (data.last_name as string) || null,
+    email: data.email as string,
+    phone: (data.phone as string) || null,
+    role: (data.role as string) || 'buyer',
+    imageUrl: (data.profile_image as string) || null,
+    createdAt: data.created_at as string,
+  }
 }
 
 export async function fetchProperties(filters?: PropertyFilters): Promise<Property[]> {

@@ -95,7 +95,7 @@ async def my_agent(ctx: JobContext):
 
     @session.on("user_state_changed")
     def on_user_state_changed(ev: UserStateChangedEvent):
-        global inactivity_task
+        nonlocal inactivity_task
         if ev.new_state == "away":
             inactivity_task = asyncio.create_task(check_if_user_present())
             return

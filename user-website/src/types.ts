@@ -60,10 +60,12 @@ export interface PropertyRecommendation {
 
 export interface UserProfile {
   id: string
+  clerk_user_id: string
   firstName: string | null
   lastName: string | null
   email: string
   phone: string | null
+  role: string
   imageUrl: string | null
   createdAt: string
 }

@@ -69,7 +69,7 @@ class SessionManager:
                 "conversation_history": [],
                 "expires_at": expires_at.isoformat(),
             }
-            self._redis.set_json(self._redis_key(session_id), redis_data, ttl=SESSION_TTL)
+            self._redis.set_json(self._redis_key(session_id), redis_data)
             self.logger.info(f"Session {session_id} initialized in Redis with {SESSION_TTL}s TTL (expires at {expires_at.isoformat()}).")
 
         except Exception as e:

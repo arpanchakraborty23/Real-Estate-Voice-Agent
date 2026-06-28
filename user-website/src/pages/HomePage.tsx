@@ -55,7 +55,6 @@ function SessionView() {
 
   return (
     <MotionSessionView {...VIEW_MOTION} className="mx-auto flex w-full max-w-lg flex-col items-center">
-      {/* Aura */}
       <AgentAudioVisualizerAura
         size="lg"
         state={agent.state}
@@ -65,7 +64,6 @@ function SessionView() {
         className="mb-4"
       />
 
-      {/* State label */}
       <span className="mb-5 text-sm font-medium text-ink-muted capitalize">
         {agent.state === 'listening' ? 'Listening...' :
          agent.state === 'thinking' ? 'Thinking...' :
@@ -77,19 +75,16 @@ function SessionView() {
          'Idle'}
       </span>
 
-      {/* Controls */}
       <AgentControlBar
         controls={{ microphone: true, leave: true }}
         className="w-full max-w-xs"
       />
 
-      {/* Chat transcript */}
       <div className="mt-6 w-full rounded-xl border border-border/50 bg-card p-4">
         <AgentChatTranscript className="max-h-48 overflow-y-auto text-sm" />
         <AgentChatIndicator />
       </div>
 
-      {/* Media */}
       <div className="mt-4 w-full space-y-4">
         <ImageGallery images={images} onClear={clearImages} />
         <PropertyRecommendations properties={recommendations} />
@@ -116,10 +111,29 @@ export function HomePage() {
   const { getToken } = useAuth()
 
   const tokenSource = useMemo(
-    () => TokenSource.endpoint('/api/v1/agent/token', {
-      headers: async () => ({
-        Authorization: `Bearer ${await getToken()}`,
-      }),
+    () => TokenSource.custom(async (options) => {
+      const clerkToken = await getToken()
+      const response = await fetch('/api/v1/agent/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${clerkToken}`,
+        },
+        body: JSON.stringify({
+          room_name: options.roomName,
+          participant_identity: options.participantIdentity,
+          participant_attributes: options.participantAttributes,
+          room_config: options.agentName ? {
+            agents: [{ agent_name: options.agentName }],
+          } : undefined,
+        }),
+      })
+      if (!response.ok) throw new Error(`Token fetch failed: ${response.status}`)
+      const data = await response.json()
+      return {
+        serverUrl: data.server_url,
+        participantToken: data.participant_token,
+      }
     }),
     [getToken],
   )
